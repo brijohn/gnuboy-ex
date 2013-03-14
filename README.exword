@@ -1,0 +1,93 @@
+GNUBOY EX-Word
+
+This is a port of the gnuboy Gameboy Color emulator to run on the
+EX-Word series of electronic dictionaries made by CASIO. This
+version is based off of gnuboy 1.0.5-svn and implements a few 
+additional features. The main feature that it currently does not 
+support is save states.
+
+Please see README and CONFIG for information about general features
+and configuration of gnuboy. This document will only describe additions
+or differences from the vanilla gnuboy.
+
+
+NEW FEATURES
+
+  * frameskip
+  * ROM select menu
+  * background skinning
+
+
+CONFIGURATION
+
+Config options that specifiy a path should use that native path format of the
+dictionary. This is in the form of \\<device>\<path>. 
+
+<device> is either crd0 or drv0 and <path> should be the full path + filename
+of the file. All instances of the backslash character must also be doubled for
+quoting reasons.
+
+
+Removed Config Options:
+
+  saveslot
+    Since savestate support has been removed this option served no real purpose
+    and was removed as well.
+
+  savename
+    The filesystem only supports 8.3 filenames, so i changed it so saenames are
+    always based on the rom name rather then allowing someone to set an arbitrarily
+    long savename.
+
+New Config Options:
+
+  frameskip
+    This will set the number of frames skipped before displaying a new frame. The
+    higher you set this the more jerky your video will become, but it will help make
+    the game play slightly faster. This should be a value greater than or equal to zero.
+    The default is zero.
+
+  skin
+     Sets the background image to display. The image needs to be exactly 528x320 pixels big
+     and it should use the gra image format which is native to CASIO exword dictionaries.
+     Keep in mind when creating background images that the rectanlge area (104,24,320,288)
+     will be where the emulator displays its image and will be covered up.
+
+     Some sample skins can be found under the skins directory.
+
+
+STARTUP
+
+On startup the emulator will read in a file called gnuboy.rc which contains additional
+configuration options. This file will be searched for in the following three locations:
+\\drv0\, \\drv0\ROMS\, or \\drv0\GNUBY\_USER\. The drv0 will be replaced with crd0 if
+run from the SD card.
+
+After reading in the user config file the emulator will launch the ROM select screen. 
+This screen displays a list of installed rom images which can be selected by using the
+arrow keys and then pressing enter. The list of available ROMS is read from a file called
+roms.lst that needs to be located in the ROMS directory. It should contain a list of all
+the filenames for the ROMS that are also to be installed in the ROMS directory. Once a
+ROM is selected the emulator should launch and you can enjoy your game!
+
+
+DEFAULT KEYBINDINGS
+
+These are the default keybindings setup by the emulator. They can easily be rebound using
+the gnuboy.rc configuration file.
+
+   Quit        - Power
+   Reset       - History
+   D-PAD       - Arrow keys
+   Start       - Backspace
+   Select      - Symbols (next to BS)
+   A           - Z
+   B           - X
+   Frameskip 0 - F1
+   Frameskip 1 - F2
+   Frameskip 2 - F3
+   Frameskip 3 - F4
+   Frameskip 4 - F5
+   Screenshot  - F8 (Saves as gnuboy.bmp under addon _USER directory)
+
+
