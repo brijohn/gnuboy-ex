@@ -17,6 +17,7 @@ void srand(unsigned int seed);
 int atoi(const char *s);
 
 void _Exit(int status);
-#define exit(x) _Exit(-2)
+int atexit(void (*function)(void));
+void exit(int status);
 
 #endif // _STDLIB_H

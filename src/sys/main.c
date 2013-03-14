@@ -71,6 +71,17 @@ static void copyright()
 }
 
 
+void shutdown(void)
+{
+	sram_save();
+	rtc_save();
+
+	memmgr_print_stats();
+
+	log_fini();
+	timer_fini();
+}
+
 int main(void *ptr)
 {
 	int i;
@@ -88,7 +99,7 @@ int main(void *ptr)
 
 	for (i = 0; defaultconfig[i]; i++)
 		rc_command(defaultconfig[i]);
-
+	atexit(shutdown);
 	vid_preinit();
 
 	select_rom();
@@ -99,12 +110,6 @@ int main(void *ptr)
 
 	emu_reset();
 	emu_run();
-
-	loader_unload();
-	memmgr_print_stats();
-
-	log_fini();
-	timer_fini();
 
 	return -2;
 }

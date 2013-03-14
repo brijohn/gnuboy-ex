@@ -135,7 +135,9 @@ int rom_load()
 	if (!f) die("cannot open rom file: %s\n", romfile);
 
 	rom.bank = header = loadfile(f, &len);
-	
+
+	fclose(f);
+
 	memcpy(rom.name, header+0x0134, 16);
 	if (rom.name[14] & 0x80) rom.name[14] = 0;
 	if (rom.name[15] & 0x80) rom.name[15] = 0;
@@ -162,8 +164,6 @@ int rom_load()
 	c = header[0x0143];
 	hw.cgb = ((c == 0x80) || (c == 0xc0)) && !forcedmg;
 	hw.gba = (hw.cgb && gbamode);
-
-	if (f) fclose(f);
 
 	return 0;
 }
@@ -221,33 +221,9 @@ void rtc_load()
 	fclose(f);
 }
 
-
-void loader_unload()
-{
-	sram_save();
-	rtc_save();
-	if (rom.bank) free(rom.bank);
-	if (ram.sbank) free(ram.sbank);
-        if (ram.ibank) free(ram.ibank);
-	rom.bank = 0;
-	ram.sbank = 0;
-	ram.ibank = 0;
-	mbc.type = mbc.romsize = mbc.ramsize = mbc.batt = 0;
-}
-
-
-static void cleanup()
-{
-	sram_save();
-	rtc_save();
-	/* IDEA - if error, write emergency savestate..? */
-}
-
 void loader_init(char *s)
 {
 	char *p;
-
-//	sys_checkdir(savedir, 1); /* needs to be writable */
 
 	romfile = s;
 	rom_load();
@@ -266,7 +242,6 @@ void loader_init(char *s)
 	sram_load();
 	rtc_load();
 
-//	atexit(cleanup);
 }
 
 rcvar_t loader_exports[] =

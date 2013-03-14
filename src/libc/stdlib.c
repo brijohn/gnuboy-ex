@@ -3,6 +3,7 @@
  * Author: Brian Johnson <brijohn@gmail.com>
  */
 
+static void (*atexit_cb)(void) = 0;
 
 static unsigned int lastrandom = 0x12345678;
 	
@@ -15,6 +16,21 @@ int rand(void)
 {
 	lastrandom = 0x41C64E6D*lastrandom + 0x3039;
 	return lastrandom >> 16;
+}
+
+void exit(int status) {
+	if (atexit_cb)
+		atexit_cb();
+	_exit(-2);
+}
+
+/* Simple atexit function only supports registering one callback
+ *  (All thats needed for gnuboy EX)
+ */
+int atexit(void (*function)(void))
+{
+	atexit_cb = function;
+	return 0;
 }
 
 int atoi(const char *s)
