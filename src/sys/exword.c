@@ -7,11 +7,14 @@
 
 void timer(void);
 interrupt old_timer;
+unsigned long old_frqcr = 0;
 
 static char *media[2] = {
 	"\\\\drv0\\",
 	"\\\\crd0\\"
 };
+
+#define FRQCR *(volatile unsigned long *)(0xa4150000)
 
 void timer_init(void) {
 	interrupt t;
@@ -29,6 +32,20 @@ void timer_fini(void) {
 	set_interrupt(0x400, old_timer);
 }
 
+
+void cpg_init(void) {
+	old_frqcr = FRQCR;
+	set_pll_mult(0b011011);
+	set_bclk_div(CLK_DIV_2);
+	set_bclk_div(CLK_DIV_4);
+	set_shclk_div(CLK_DIV_4);
+	frqcr_kick();
+}
+
+void cpg_fini(void) {
+	FRQCR = old_frqcr;
+	frqcr_kick();
+}
 
 void delay(uint32_t ms)
 {

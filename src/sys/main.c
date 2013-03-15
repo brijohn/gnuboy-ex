@@ -80,6 +80,7 @@ void shutdown(void)
 
 	log_fini();
 	timer_fini();
+	cpg_fini();
 }
 
 int main(void *ptr)
@@ -88,6 +89,7 @@ int main(void *ptr)
 	if (*(long *)ptr == 1)
 		return -1;
 
+	cpg_init();
 	log_init();
 	memmgr_init();
 	timer_init();
