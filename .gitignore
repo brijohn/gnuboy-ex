@@ -1,0 +1,10 @@
+*.swp
+*~
+*.o
+*.htm
+build
+*.d01
+*.elf
+*.map
+*.patch
+*.diff
