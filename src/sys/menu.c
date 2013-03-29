@@ -701,31 +701,22 @@ void select_rom()
 {
 	int item;
 	menu m;
-	char *p, *cmd;
-	char line[20];
-	FILE * f, *f2;
+	char filename[64];
+	int ret, handle;
+	unsigned long type;
 	menu_init(&m, 2);
-	char *fname = roms_filename("roms.lst");
-	f = fopen(fname, "r");
-	if (!f) die("No roms.lst file found.\n");
-	for (;;)
-	{
-		if (feof(f)) break;
-		fgets(line, sizeof(line), f);
-		if ((p = strpbrk(line, "#\r\n")))
-			*p = 0;
-		if (*line != '\0') {
-			if ((f2 = fopen(roms_filename(line), "r"))) {
-				fclose(f2);
-				insert_menuitem(&m, line);
-			}
-		}
+	char *file_mask = roms_filename("*.gbc");
+	ret = sys_findfirst(file_mask, &handle, filename, &type);
+	while (ret == 0) {
+		if (type == 1)
+			insert_menuitem(&m, filename);
+		ret = sys_findnext(handle, filename, &type);
 	}
-	fclose(f);
+	sys_findclose(handle);
 	if (m.used == 0) die("No roms found\n");
 	item = show_menu(&m);
-	fname = roms_filename(m.array[item]);
-	loader_init(fname);
+	file_mask = roms_filename(m.array[item]);
+	loader_init(file_mask);
 	menu_free(&m);
 }
 

@@ -65,10 +65,9 @@ run from the SD card.
 
 After reading in the user config file the emulator will launch the ROM select screen. 
 This screen displays a list of installed rom images which can be selected by using the
-arrow keys and then pressing enter. The list of available ROMS is read from a file called
-roms.lst that needs to be located in the ROMS directory. It should contain a list of all
-the filenames for the ROMS that are also to be installed in the ROMS directory. Once a
-ROM is selected the emulator should launch and you can enjoy your game!
+arrow keys and then pressing enter. The emulator will search the ROMS directory for any
+files with a gbc extension and add them to the list of available ROMS. Once a ROM is
+selected the emulator should launch and you can enjoy your game!
 
 
 DEFAULT KEYBINDINGS
