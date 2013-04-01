@@ -656,6 +656,43 @@ void print_menu(int start, int current, menu *m)
 	lcdc_copy_vram();
 }
 
+void display_dialog(int x, int y, int width, int height)
+{
+	set_pen(create_rgb16(0xff, 0xff, 0xff));
+	draw_rect(x, y, width, height);
+	set_pen(create_rgb16(0, 0, 0));
+	draw_line(x, y, x + width, y);
+	draw_line(x + 5, y + 5, x + width - 5, y + 5);
+
+	draw_line(x, y, x, y + height);
+	draw_line(x + 5, y + 5, x + 5, y + height - 5);
+
+	draw_line(x, y + height, x + width, y + height);
+	draw_line(x + 5, y + height - 5, x + width - 5, y + height - 5);
+
+	draw_line(x + width, y, x + width, y + height);
+	draw_line(x + width - 5, y + 5, x + width - 5, y + height - 5);
+}
+
+
+void show_no_roms_available()
+{
+	lcdc_set_vram_address((void*)0xAC202800);
+	lcdc_set_window(104, 24, 320, 288);
+	set_pen(create_rgb16(0xff, 0xff, 0xff));
+	draw_rect(0, 0, 320, 288);
+	set_pen(create_rgb16(0, 0, 0));
+	set_font(&iso_dot_font);
+	display_dialog(70, 75, 175, 80);
+	render_text(85, 93, "No ROMS installed");
+	render_text(85, 115, "on device.");
+	lcdc_copy_vram();
+	while(1) {
+		if (get_key_pressed(KEY_POWER))
+			exit(-2);
+	}
+}
+
 int show_menu(menu *m)
 {
 	int start = 0, current = 0, x = 0;
@@ -668,6 +705,8 @@ int show_menu(menu *m)
 			print_menu(start, current, m);
 			refresh = 0;
 		}
+		if (get_key_pressed(KEY_POWER))
+			exit(-2);
 		if (get_key_pressed(KEY_DOWN)) {
 			if (current < m->used - 1) {
 				++current; 
@@ -713,7 +752,7 @@ void select_rom()
 		ret = sys_findnext(handle, filename, &type);
 	}
 	sys_findclose(handle);
-	if (m.used == 0) die("No roms found\n");
+	if (m.used == 0) show_no_roms_available();
 	item = show_menu(&m);
 	file_mask = roms_filename(m.array[item]);
 	loader_init(file_mask);
