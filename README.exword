@@ -35,11 +35,15 @@ Removed Config Options:
     and was removed as well.
 
   savename
-    The filesystem only supports 8.3 filenames, so i changed it so saenames are
-    always based on the rom name rather then allowing someone to set an arbitrarily
+    The filesystem only supports 8.3 filenames, so I changed it so savenames are
+    always based on the rom filename rather then allowing someone to set an arbitrarily
     long savename.
 
 New Config Options:
+
+  romdir
+    This options specifies in which directory to search for Gameboy roms. The default
+    value is \\<device\ROMS\.
 
   frameskip
     This will set the number of frames skipped before displaying a new frame. The
@@ -50,7 +54,7 @@ New Config Options:
   skin
      Sets the background image to display. The image needs to be exactly 528x320 pixels big
      and it should use the gra image format which is native to CASIO exword dictionaries.
-     Keep in mind when creating background images that the rectanlge area (104,24,320,288)
+     Keep in mind when creating background images that the rectangle area (104,24,320,288)
      will be where the emulator displays its image and will be covered up.
 
      Some sample skins can be found under the skins directory.
@@ -59,9 +63,9 @@ New Config Options:
 STARTUP
 
 On startup the emulator will read in a file called gnuboy.rc which contains additional
-configuration options. This file will be searched for in the following three locations:
-\\drv0\, \\drv0\ROMS\, or \\drv0\GNUBY\_USER\. The drv0 will be replaced with crd0 if
-run from the SD card.
+configuration options. This file will be searched for in the following two locations:
+\\<device>\, and \\<device>\GNUBY\_USER\. Where <device> will either be crd0 or drv0
+depending on where the emulator is installed.
 
 After reading in the user config file the emulator will launch the ROM select screen. 
 This screen displays a list of installed rom images which can be selected by using the

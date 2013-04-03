@@ -77,11 +77,12 @@ static int ramsize_table[256] =
 
 
 static char *romfile=NULL;
-static char sramfile[40];
-static char rtcfile[40];
+static char *sramfile;
+static char *rtcfile;
 
 static char *savename=NULL;
 static char *savedir=NULL;
+static char *romdir=NULL;
 
 static int saveslot=0;
 
@@ -221,24 +222,35 @@ void rtc_load()
 	fclose(f);
 }
 
-void loader_init(char *s)
+static char *base(char *s)
 {
 	char *p;
+	p = (char *) strrchr(s, DIRSEP_CHAR);
+	if (p) return p+1;
+	return s;
+}
+
+void loader_init(char *s)
+{
+	char *name, *p;
 
 	romfile = s;
 	rom_load();
 	vid_settitle(rom.name);
 	
-	p = strchrnul(romfile, '.');
-	strncpy(sramfile, romfile, p-romfile);
-	sramfile[p-romfile]='\0';
-	strcat(sramfile, ".sav");
 
+	name = strdup(base(romfile));
+	p = (char *) strchr(name, '.');
+	if (p) *p = 0;
 
-	strncpy(rtcfile, romfile, p-romfile);
-	rtcfile[p-romfile]='\0';
-	strcat(rtcfile, ".rtc");
+	sramfile = malloc(strlen(savedir) + strlen(name) + 7);
+	sprintf(sramfile, "%s%s.sav", savedir, name);
+	rtcfile = malloc(strlen(savedir) + strlen(name) + 7);
+	sprintf(rtcfile, "%s%s.rtc", savedir, name);
 	
+	printf("Loading sramfile: %s\n", sramfile);
+	printf("Loading rtcfile: %s\n", rtcfile);
+
 	sram_load();
 	rtc_load();
 
@@ -247,8 +259,7 @@ void loader_init(char *s)
 rcvar_t loader_exports[] =
 {
 	RCV_STRING("savedir", &savedir),
-/*	RCV_STRING("savename", &savename),
-	RCV_INT("saveslot", &saveslot),*/
+	RCV_STRING("romdir", &romdir),
 	RCV_BOOL("forcebatt", &forcebatt),
 	RCV_BOOL("nobatt", &nobatt),
 	RCV_BOOL("forcedmg", &forcedmg),

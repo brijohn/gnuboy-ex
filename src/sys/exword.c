@@ -84,10 +84,11 @@ void sys_initpath()
 	unsigned long drv;
 	sys_dict_info(&drv, id);
 	buf = malloc(50);
-	sprintf(buf, "%s:%s%s\\_USER\\:%sROMS\\", media[drv], media[drv], id, media[drv]);
+	sprintf(buf, "%s:%s%s\\_USER\\", media[drv], media[drv], id);
 	rc_setvar("rcpath", 1, &buf);
 	sprintf(buf, "%sROMS\\", media[drv]);
 	rc_setvar("savedir", 1, &buf);
+	rc_setvar("romdir", 1, &buf);
 	free(buf);
 }
 

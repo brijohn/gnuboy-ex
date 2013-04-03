@@ -586,11 +586,6 @@ struct font iso_dot_font = {
 	iso12x22,
 };
 
-static char *media[2] = {
-	"\\\\drv0\\",
-	"\\\\crd0\\"
-};
-
 typedef struct {
   char **array;
   unsigned int used;
@@ -600,10 +595,8 @@ typedef struct {
 char * roms_filename(char* name)
 {
 	static char filename[100];
-	char id[10];
-	unsigned long drv;
-	sys_dict_info(&drv, id);
-	sprintf(filename, "%sROMS\\%s", media[drv], name);
+	char *romdir = rc_getstr("romdir");
+	sprintf(filename, "%s%s", romdir, name);
 	return filename;
 }
 
