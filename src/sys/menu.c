@@ -675,7 +675,7 @@ void show_no_roms_available()
 	set_pen(create_rgb16(0xff, 0xff, 0xff));
 	draw_rect(0, 0, 320, 288);
 	set_pen(create_rgb16(0, 0, 0));
-	set_font(&iso_dot_font);
+	set_font(NULL);
 	display_dialog(70, 75, 175, 80);
 	render_text(85, 93, "No ROMS installed");
 	render_text(85, 115, "on device.");
