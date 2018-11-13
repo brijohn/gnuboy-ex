@@ -28,6 +28,7 @@ HTML		:=	$(HTMLINFILES:.htm.in=.htm)
 CC_OPTS := -DGNUBOY_DISABLE_SAVESTATES -DGNUBOY_USE_BINARY_RTC_FILES -DALT_DIRSEP
 LDFLAGS := -nostdlib -L$(DEVKITPRO)/libdataplus/lib -ldataplus -lgraphics -lsh4a
 CFLAGS :=  -fno-builtin -I$(DEVKITPRO)/libdataplus/include -I$(SOURCEDIR) -I$(SOURCEDIR)/libc/include -O3 $(CC_OPTS)
+ASFLAGS := -m4-nofpu
 
 .PHONY: clean app
 
